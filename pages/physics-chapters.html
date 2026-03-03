@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Chapters | ExamEdge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #007bff; --dark: #1e293b; --gray: #64748b; --light: #f8fafc; }
+        body { background: #f8f9fa; font-family: 'Poppins', sans-serif; margin: 0; padding: 20px 5%; }
+
+        header { text-align: center; margin-bottom: 40px; animation: fadeInDown 0.6s ease; }
+        .back-btn { position: absolute; left: 5%; top: 30px; text-decoration: none; color: var(--dark); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+        /* SECTION CONTAINER */
+        .section-box { background: #fff; border-radius: 20px; margin-bottom: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        
+        /* HEADER (CLICKABLE) */
+        .section-header { padding: 25px; background: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s; }
+        .section-header:hover { background: #f0f7ff; }
+        .section-header h2 { margin: 0; font-size: 1.4rem; color: var(--dark); }
+        .section-header i { transition: 0.4s; color: var(--primary); }
+        .section-header.active i { transform: rotate(180deg); }
+
+        /* CHAPTER LIST (ANIMATED) */
+        .chapter-list { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0, 1, 0, 1); background: #fff; }
+        .chapter-list.open { max-height: 2000px; transition: max-height 0.8s ease-in-out; }
+
+        .chapter-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 25px; border-top: 1px solid #f1f5f9; transition: 0.2s; animation: slideIn 0.4s backwards; }
+        .chapter-item:hover { background: #f8fafc; }
+        .chapter-info { display: flex; align-items: center; gap: 15px; }
+        .chapter-num { background: #e0e7ff; color: var(--primary); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem; font-weight: 800; }
+        .chapter-name { font-weight: 600; color: #334155; }
+
+        /* DOWNLOAD BUTTON */
+        .download-btn { background: var(--primary); color: #fff; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; transition: 0.3s; }
+        .download-btn:hover { background: var(--dark); transform: translateY(-2px); }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
+
+        .coming-soon { padding: 40px; text-align: center; color: var(--gray); font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+
+    <header>
+        <h1 style="font-weight: 800;">JEE Physics Track</h1>
+        <p style="color: var(--gray);">Master your concepts chapter by chapter</p>
+    </header>
+
+    <div class="section-box">
+        <div class="section-header" onclick="toggleSection('class-11', this)">
+            <h2><i class="fas fa-book-open"></i> Class 11th Chapters</h2>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div id="class-11" class="chapter-list">
+            <div id="eleventh-content"></div>
+        </div>
+    </div>
+
+    <div class="section-box">
+        <div class="section-header" onclick="toggleSection('class-12', this)">
+            <h2><i class="fas fa-atom"></i> Class 12th Chapters</h2>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div id="class-12" class="chapter-list">
+            <div class="coming-soon">Class 12th chapters are being updated soon...</div>
+        </div>
+    </div>
+
+    <script>
+        const chapters11 = [
+            "Units and Dimension", "Vector & Calculus", "Motion in a Straight line", 
+            "Motion in a Plane", "Newton law of Motion", "Work, Power & Energy", 
+            "Motion of System of Particle and COM", "Rotational Motion", "Gravitation", 
+            "Mechanical Properties of Solids", "Mechanical Properties of Fluids", 
+            "Thermal Properties of Matter", "Kinetic Theory of Gases", 
+            "Thermodynamics", "Simple Harmonic Motion", "Waves Motion"
+        ];
+
+        function load11thChapters() {
+            const container = document.getElementById('eleventh-content');
+            container.innerHTML = chapters11.map((ch, index) => `
+                <div class="chapter-item" style="animation-delay: ${index * 0.05}s">
+                    <div class="chapter-info">
+                        <div class="chapter-num">${index + 1}</div>
+                        <span class="chapter-name">${ch}</span>
+                    </div>
+                    <button class="download-btn" onclick="downloadChapter('${ch}')">
+                        <i class="fas fa-cloud-download-alt"></i> Download
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function toggleSection(id, header) {
+            const list = document.getElementById(id);
+            const isOpen = list.classList.contains('open');
+            
+            // Close all others if you want (optional)
+            // list.classList.toggle('open');
+            
+            if(!isOpen) {
+                list.classList.add('open');
+                header.classList.add('active');
+            } else {
+                list.classList.remove('open');
+                header.classList.remove('active');
+            }
+        }
+
+        function downloadChapter(name) {
+            alert("Starting download for: " + name);
+            // Yahan aap PDF link dal sakte hain
+        }
+
+        // Initialize chapters
+        load11thChapters();
+    </script>
+</body>
+</html>

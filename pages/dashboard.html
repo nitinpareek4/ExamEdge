@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard | ExamEdge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #007bff; --neet: #d63384; --dark: #1e293b; --gold: #fab005; --gray: #64748b; }
+        body { background: #f8f9fa; font-family: 'Poppins', sans-serif; margin: 0; overflow-x: hidden; width: 100%; }
+
+        /* NAVBAR */
+        .navbar { padding: 15px 5%; background: #fff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo-area { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo-area img { width: 35px; }
+        .brand-name { font-weight: 800; font-size: 1.5rem; color: var(--dark); }
+        .menu-icon { font-size: 1.5rem; cursor: pointer; transition: 0.6s; padding: 10px; color: var(--dark); }
+        .menu-icon:hover { color: var(--primary); transform: rotate(180deg); }
+
+        /* SIDEBAR */
+        .sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; background: #fff; box-shadow: -10px 0 30px rgba(0,0,0,0.1); z-index: 2000; transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1); padding: 40px 25px; box-sizing: border-box; }
+        .sidebar.active { right: 0; }
+        .side-link { padding: 14px 20px; margin-bottom: 8px; border-radius: 12px; display: flex; align-items: center; gap: 15px; font-weight: 700; color: var(--gray); border: none; background: none; width: 100%; text-align: left; cursor: pointer; transition: 0.3s; }
+        .side-link:hover { background: #f0f7ff; color: var(--primary); }
+
+        /* MOTIVATION */
+        .motivation-text { max-width: 700px; margin: 20px auto 0; color: var(--gray); font-size: 0.95rem; line-height: 1.6; font-style: italic; border-left: 4px solid var(--primary); padding-left: 20px; text-align: left; display: inline-block; }
+
+        /* SEARCH */
+        .action-bar { padding: 30px 5% 10px; display: flex; justify-content: center; }
+        .search-wrapper { position: relative; width: 100%; max-width: 450px; }
+        .search-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--gray); }
+        .search-wrapper input { width: 100%; padding: 14px 45px; border-radius: 15px; border: 1.5px solid #e2e8f0; outline: none; box-sizing: border-box; font-family: inherit; }
+
+        /* EXAM CARDS (Horizontal & Responsive) */
+        .exam-container { display: flex; gap: 20px; padding: 20px 5% 50px; max-width: 1400px; margin: auto; overflow-x: auto; scrollbar-width: none; }
+        .exam-container::-webkit-scrollbar { display: none; }
+        .exam-card { background: #fff; padding: 40px 30px; border-radius: 25px; border: 1px solid #eee; text-align: center; flex: 1; min-width: 320px; transition: 0.4s; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        .exam-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
+
+        /* POPUPS & ANIMATIONS */
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 3000; backdrop-filter: blur(8px); justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
+        .popup-content { background: #fff; padding: 35px; border-radius: 30px; width: 90%; max-width: 600px; position: relative; animation: slideUp 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); max-height: 90vh; overflow-y: auto; box-sizing: border-box; }
+        
+        /* SYLLABUS PDF POPUP */
+        .pdf-popup { max-width: 900px; width: 100%; height: 90vh; }
+        iframe { width: 100%; height: calc(100% - 60px); border-radius: 15px; border: 1px solid #ddd; }
+
+        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeInScale { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .resource-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        .res-btn { padding: 16px; border-radius: 15px; border: 1.5px solid #f1f5f9; background: #fff; font-weight: 700; cursor: pointer; transition: 0.25s; display: flex; align-items: center; gap: 12px; animation: fadeInScale 0.3s backwards; }
+        .res-btn:hover { background: var(--dark); color: #fff; transform: scale(1.02); }
+
+        .subject-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .sub-btn { padding: 30px 20px; border-radius: 20px; border: none; font-weight: 800; color: #fff; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 12px; transition: 0.3s; animation: fadeInScale 0.4s backwards; }
+        .sub-btn:hover { transform: translateY(-8px); }
+        .sub-btn i { font-size: 2rem; }
+        
+        .phy { background: linear-gradient(135deg, #3498db, #2980b9); } 
+        .che { background: linear-gradient(135deg, #f1c40f, #f39c12); } 
+        .mat { background: linear-gradient(135deg, #e74c3c, #c0392b); } 
+        .bio { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+
+        /* PROFILE UI */
+        .profile-header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
+        .profile-display { background: #f8fafc; padding: 25px; border-radius: 20px; border: 1.5px dashed #cbd5e1; }
+        .edit-btn { background: var(--primary); color: #fff; border: none; padding: 6px 15px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .edit-btn:hover { background: var(--dark); }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 600; color: var(--dark); border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
+        .info-row span { color: var(--gray); font-weight: 400; }
+
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 0.85rem; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #f1f5f9; box-sizing: border-box; }
+
+        .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 1500; }
+        .overlay-bg.active { display: block; }
+
+        /* MOBILE ADJUSTMENTS */
+        @media (max-width: 600px) {
+            .exam-container { flex-direction: column; overflow-x: visible; }
+            .exam-card { min-width: 100%; padding: 30px 20px; }
+            .brand-name { font-size: 1.2rem; }
+            .popup-content { padding: 25px; border-radius: 20px; }
+            .motivation-text { font-size: 0.85rem; padding-left: 15px; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay-bg" id="overlay" onclick="toggleSidebar()"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <span style="font-size: 2.2rem; cursor: pointer;" onclick="toggleSidebar()">&times;</span>
+        <div style="margin-top: 30px;">
+            <button class="side-link" onclick="location.reload()"><i class="fas fa-th-large"></i> Dashboard</button>
+            <button class="side-link" onclick="openPopup('profile-popup')"><i class="fas fa-user-circle"></i> Profile Settings</button>
+            <button class="side-link" onclick="openPopup('help-popup')"><i class="fas fa-headset"></i> Help & Support</button>
+            <hr style="margin: 25px 0; border: 0.5px solid #eee;">
+            <button class="side-link" style="color: #ff4757;" onclick="window.location.href='../index.html'"><i class="fas fa-power-off"></i> Logout</button>
+        </div>
+    </aside>
+
+    <nav class="navbar">
+        <div class="logo-area" onclick="location.reload()">
+            <img src="../assets/image/logo.png" alt="Logo">
+            <span class="brand-name">ExamEdge</span>
+        </div>
+        <div class="menu-icon" onclick="toggleSidebar()"><i class="fas fa-cog"></i></div>
+    </nav>
+
+    <header style="text-align: center; padding: 40px 5% 0;">
+        <h1 style="font-weight: 800; margin: 0;">Welcome, <span id="welcome-name">Aspirant</span>! 🚀</h1>
+        <div class="motivation-text">
+            Safar thoda kathin hai, magar hausla buland rakhna.<br>
+            Har ek chota badlav badi kamyabi ka hissa hota hai.<br>
+            Aaj ki mehnat hi kal tumhare sapno ka aadhar banegi.<br>
+            Rukna mat, thakna mat; Exam ki raah tumhari koshishon se hi guzregi.
+        </div>
+    </header>
+
+    <section class="action-bar">
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search Chapters, PYQs or Topics...">
+        </div>
+    </section>
+
+    <section class="exam-container">
+        <div class="exam-card">
+            <h2 style="color:var(--primary);">JEE Main</h2>
+            <p style="color:var(--gray);">Access PYQs & Mock Test Resources</p>
+            <button class="side-link" style="background:var(--primary); color:#fff; justify-content:center; margin-top:20px; border-radius:12px;" onclick="openExam('JEE Main')">Explore Track</button>
+        </div>
+        <div class="exam-card">
+            <h2 style="color:var(--gold);">JEE Advanced</h2>
+            <p style="color:var(--gray);">Deep Conceptual Content for IIT</p>
+            <button class="side-link" style="background:var(--gold); color:#fff; justify-content:center; margin-top:20px; border-radius:12px;" onclick="openExam('JEE Advanced')">Explore Track</button>
+        </div>
+        <div class="exam-card">
+            <h2 style="color:var(--neet);">NEET</h2>
+            <p style="color:var(--gray);">NCERT Focused Medical Track</p>
+            <button class="side-link" style="background:var(--neet); color:#fff; justify-content:center; margin-top:20px; border-radius:12px;" onclick="openExam('NEET')">Explore Track</button>
+        </div>
+    </section>
+
+    <div id="syllabus-popup" class="popup-overlay">
+    <div class="popup-content pdf-popup">
+        <span style="position:absolute; right:25px; top:10px; cursor:pointer; font-size:28px; z-index:10;" onclick="closePopup('syllabus-popup')">&times;</span>
+        <h2 style="margin-top:0;">Syllabus</h2>
+        
+        <iframe 
+            src="jeemain.pdf#toolbar=0&navpanes=0&view=FitH" 
+            title="Syllabus" 
+            style="width:100%; height:calc(100% - 60px); border-radius:15px; border:1px solid #ddd; touch-action: pinch-zoom;">
+        </iframe>
+        
+        <p style="font-size: 10px; color: var(--gray); margin-top: 5px; text-align: center;" class="mobile-only">
+            Note: Use two fingers to zoom on mobile.
+        </p>
+    </div>
+</div>
+
+    <div id="exam-popup" class="popup-overlay">
+        <div class="popup-content">
+            <span style="position:absolute; right:25px; top:20px; cursor:pointer; font-size:28px;" onclick="closePopup('exam-popup')">&times;</span>
+            <h2 id="exam-title">Resources</h2>
+            <div class="resource-grid" id="res-list"></div>
+        </div>
+    </div>
+
+    <div id="subject-popup" class="popup-overlay">
+        <div class="popup-content">
+            <span style="position:absolute; right:25px; top:20px; cursor:pointer; font-size:28px;" onclick="closePopup('subject-popup')">&times;</span>
+            <h2 id="sub-title">Select Subject</h2>
+            <div class="subject-grid" id="subject-list"></div>
+        </div>
+    </div>
+
+    <div id="profile-popup" class="popup-overlay">
+        <div class="popup-content">
+            <span style="position:absolute; right:25px; top:20px; cursor:pointer; font-size:28px;" onclick="closePopup('profile-popup')">&times;</span>
+            <div id="profile-form-view">
+                <h2 style="margin-bottom: 20px;">Profile Settings</h2>
+                <div class="form-group"><label>Full Name</label><input type="text" id="in-name" placeholder="Rahul Sharma"></div>
+                <div class="form-group"><label>Class</label><select id="in-class"><option>11th</option><option>12th</option><option>Dropper</option></select></div>
+                <div class="form-group"><label>Exam Preference</label><select id="in-exam"><option>JEE</option><option>NEET</option></select></div>
+                <div class="form-group"><label>Target Year</label><input type="number" id="in-year" value="2025"></div>
+                <button class="side-link" style="background:var(--dark); color:#fff; justify-content:center; border-radius:12px;" onclick="saveProfile()">Save Profile</button>
+            </div>
+            <div id="profile-saved-view" style="display:none;">
+                <div class="profile-header-container">
+                    <h2 style="margin:0;">Profile Details</h2>
+                    <button class="edit-btn" onclick="editProfile()"><i class="fas fa-pen"></i> Edit</button>
+                </div>
+                <div class="profile-display">
+                    <div class="info-row">Name: <span id="disp-name">-</span></div>
+                    <div class="info-row">Class: <span id="disp-class">-</span></div>
+                    <div class="info-row">Exam: <span id="disp-exam">-</span></div>
+                    <div class="info-row">Year: <span id="disp-year">-</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="help-popup" class="popup-overlay">
+        <div class="popup-content" style="text-align: center;">
+            <span style="position:absolute; right:25px; top:20px; cursor:pointer; font-size:28px;" onclick="closePopup('help-popup')">&times;</span>
+            <h2>Support Center</h2>
+            <div style="margin-top:20px;">
+                <a href="https://wa.me/8764428580" target="_blank" style="text-decoration:none; display:block; padding:18px; background:#f0fff4; border:1px solid #25D366; border-radius:15px; margin-bottom:12px; color:#128C7E; font-weight:700;"><i class="fab fa-whatsapp"></i> WhatsApp: 8764428580</a>
+                <a href="mailto:ExamEdgeteam@outlook.com" style="text-decoration:none; display:block; padding:18px; background:#f0f7ff; border:1px solid #0078d4; border-radius:15px; color:#0078d4; font-weight:700;"><i class="fas fa-envelope"></i> ExamEdgeteam@outlook.com</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentExam = "";
+        const resources = ["PYQs", "12th Board PYQs", "Top 100 Qs", "Short Notes", "Formula Sheets", "Mindmaps", "NCERT Content", "Syllabus"];
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
+        function openPopup(id) { if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar(); document.getElementById(id).style.display = 'flex'; }
+        function closePopup(id) { document.getElementById(id).style.display = 'none'; }
+
+        function openExam(name) {
+            currentExam = name;
+            document.getElementById('exam-title').innerText = name + " Track";
+            const grid = document.getElementById('res-list');
+            grid.innerHTML = resources.map((r, index) => 
+                `<button class="res-btn" style="animation-delay: ${index * 0.05}s" onclick="handleRes('${r}')">${r}</button>`
+            ).join('');
+            openPopup('exam-popup');
+        }
+
+        function handleRes(res) {
+            if(res === "Syllabus") { 
+                closePopup('exam-popup');
+                openPopup('syllabus-popup'); 
+                return; 
+            }
+            closePopup('exam-popup');
+            const subGrid = document.getElementById('subject-list');
+            let subs = currentExam.includes("JEE") ? 
+                [{n:'Physics',c:'phy',i:'fa-atom'},{n:'Chemistry',c:'che',i:'fa-flask'},{n:'Maths',c:'mat',i:'fa-calculator'}] : 
+                [{n:'Physics',c:'phy',i:'fa-atom'},{n:'Chemistry',c:'che',i:'fa-flask'},{n:'Biology',c:'bio',i:'fa-dna'}];
+            
+            subGrid.innerHTML = subs.map((s, index) => `
+                <button class="sub-btn ${s.c}" style="animation-delay: ${index * 0.1}s" onclick="goToSubject('${s.n}')">
+                    <i class="fas ${s.i}"></i>
+                    <span>${s.n}</span>
+                </button>
+            `).join('');
+            openPopup('subject-popup');
+        }
+
+        function goToSubject(subject) {
+            if(subject === "Physics") { window.location.href = "physics-chapters.html"; } 
+            else { alert("Opening " + subject); }
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('in-name').value || "Aspirant";
+            document.getElementById('welcome-name').innerText = name;
+            document.getElementById('disp-name').innerText = name;
+            document.getElementById('disp-class').innerText = document.getElementById('in-class').value;
+            document.getElementById('disp-exam').innerText = document.getElementById('in-exam').value;
+            document.getElementById('disp-year').innerText = document.getElementById('in-year').value;
+            document.getElementById('profile-form-view').style.display = 'none';
+            document.getElementById('profile-saved-view').style.display = 'block';
+        }
+
+        function editProfile() {
+            document.getElementById('profile-form-view').style.display = 'block';
+            document.getElementById('profile-saved-view').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

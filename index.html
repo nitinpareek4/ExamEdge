@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamEdge | India's Premium JEE & NEET Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Modern Animations & Glass Effects */
+        .popup-content {
+            transform: scale(0.85);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .popup-overlay.active .popup-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* BIG & ATTRACTIVE SECTIONS */
+        .info-container {
+            max-width: 1200px;
+            margin: 120px auto 80px; /* Top margin increased to 120px for shifting down */
+            padding: 0 20px;
+        }
+
+        .detail-section {
+            margin-bottom: 100px;
+            padding-top: 20px; /* Extra padding for shifting content */
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        /* PREMIUM CARDS */
+        .info-card {
+            background: #ffffff;
+            border-radius: 25px;
+            padding: 45px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+            transition: all 0.4s ease;
+            border: 1px solid #f1f1f1;
+            position: relative;
+        }
+        .info-card:hover { 
+            transform: translateY(-12px); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1); 
+        }
+
+        .jee-card { border-top: 8px solid #007bff; }
+        .neet-card { border-top: 8px solid #d63384; }
+        
+        .jee-badge { background: #e7f1ff; color: #007bff; font-size: 1.1rem; font-weight: 700; padding: 10px 25px; border-radius: 30px; }
+        .neet-badge { background: #fff0f6; color: #d63384; font-size: 1.1rem; font-weight: 700; padding: 10px 25px; border-radius: 30px; }
+
+        .info-card h3 { font-size: 2rem; margin-bottom: 20px; }
+        .info-card p { font-size: 1.1rem; line-height: 1.6; color: #666; margin-bottom: 20px; }
+        .info-card ul { list-style: none; padding: 0; }
+        .info-card li { font-size: 1.05rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .info-card li i { font-size: 0.9rem; opacity: 0.7; }
+
+        .input-box { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 15px; border: 2px solid #eee; outline: none; font-size: 1rem; box-sizing: border-box; }
+        .input-box:focus { border-color: #007bff; }
+        .forgot-link { display: block; text-align: right; margin: -10px 0 20px; font-size: 0.9rem; color: #888; cursor: pointer; }
+        
+        .btn-social {
+            width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #eee;
+            background: #fff; cursor: pointer; font-weight: 600; display: flex;
+            align-items: center; justify-content: center; gap: 15px; font-size: 1rem;
+        }
+        .btn-primary { background: #007bff; color: white; border: none; }
+        .switch-txt { text-align: center; margin-top: 25px; cursor: pointer; color: #007bff; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo-area">
+            <img src="assets/image/logo.png" alt="ExamEdge" class="logo">
+            <span class="brand-name">ExamEdge</span>
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn btn-login" onclick="openAuth('login')">Login</button>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1 style="font-size: 4rem; margin-bottom: 20px;">Master JEE & NEET <br><span style="color: #ffd700;">With The Edge</span></h1>
+            <p style="font-size: 1.3rem;">Your all-in-one destination for premium notes, mock tests, and rank tracking.</p>
+            <button class="nav-btn btn-login" style="padding: 20px 50px; font-size: 1.2rem; margin-top: 30px;" onclick="openAuth('login')">Login to Access Hub</button>
+        </div>
+    </header>
+
+    <section class="info-container">
+        <div class="detail-section">
+            <span class="jee-badge">JEE Engineering</span>
+            <h2 style="font-size: 2.8rem; margin: 25px 0;">Joint Entrance Examination</h2>
+            <div class="info-grid">
+                <div class="info-card jee-card">
+                    <h3 style="color: #007bff;"><i class="fas fa-microchip"></i> JEE Main</h3>
+                    <p>India's largest engineering entrance for NITs, IIITs, and top GFTIs.</p>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> <strong>Eligibility:</strong> 75% in PCM (65% for SC/ST).</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Attempts:</strong> 3 consecutive years available.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Mode:</strong> Computer Based Test (CBT).</li>
+                    </ul>
+                </div>
+                <div class="info-card jee-card">
+                    <h3 style="color: #007bff;"><i class="fas fa-rocket"></i> JEE Advanced</h3>
+                    <p>The gateway to the prestigious Indian Institutes of Technology (IITs).</p>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> <strong>Criteria:</strong> Must be in Top 2,50,000 of JEE Main.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Pattern:</strong> Two critical papers of 3 hours each.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Difficulty:</strong> Known for deep conceptual questions.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <hr style="margin: 80px 0; border: none; border-top: 2px dashed #eee;">
+
+        <div class="detail-section">
+            <span class="neet-badge">NEET Medical</span>
+            <h2 style="font-size: 2.8rem; margin: 25px 0;">National Eligibility cum Entrance Test</h2>
+            <div class="info-grid">
+                <div class="info-card neet-card">
+                    <h3 style="color: #d63384;"><i class="fas fa-stethoscope"></i> Exam Pattern</h3>
+                    <p>The single entrance test for MBBS, BDS, and AYUSH courses in India.</p>
+                    <ul>
+                        <li><i class="fas fa-check-circle" style="color:#d63384"></i> <strong>Total Marks:</strong> 720 (Biology carries 360).</li>
+                        <li><i class="fas fa-check-circle" style="color:#d63384"></i> <strong>Time:</strong> 200 minutes of intense focus.</li>
+                        <li><i class="fas fa-check-circle" style="color:#d63384"></i> <strong>Marking:</strong> +4 for Correct, -1 for Wrong.</li>
+                    </ul>
+                </div>
+                <div class="info-card neet-card">
+                    <h3 style="color: #d63384;"><i class="fas fa-dna"></i> Eligibility Hub</h3>
+                    <p>Focus strictly on NCERT Biology to ace the medical race.</p>
+                    <ul>
+                        <li><i class="fas fa-check-circle" style="color:#d63384"></i> <strong>Age Limit:</strong> Min 17 years (No upper limit).</li>
+                        <li><i class="fas fa-check-circle" style="color:#d63384"></i> <strong>Subjects:</strong> Physics, Chemistry, Biology (PCB).</li>
+                        <li><i class="fas fa-check-circle" style="color:#d63384"></i> <strong>NCERT:</strong> The primary source for 95% questions.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="auth-popup" class="popup-overlay" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+        <div class="popup-content" style="background: #fff; padding: 50px; border-radius: 30px; width: 450px; position: relative;">
+            <span class="close" onclick="closePopup()" style="position:absolute; right:25px; top:20px; cursor:pointer; font-size:28px;">&times;</span>
+            
+            <h2 id="auth-title" style="text-align:center; font-size:2rem; margin-bottom:10px;">Welcome Back</h2>
+            <p id="auth-subtitle" style="text-align:center; color:#888; margin-bottom:30px;">Login to access your dashboard.</p>
+            
+            <div id="signup-name-div" style="display:none;">
+                <input type="text" id="u-name" placeholder="Full Name" class="input-box">
+            </div>
+
+            <input type="email" id="u-email" placeholder="Email Address" class="input-box">
+            <input type="password" id="u-pass" placeholder="Password" class="input-box">
+            
+            <span id="forgot-link" class="forgot-link" onclick="handleForgot()">Forgot Password?</span>
+            
+            <button class="btn-primary" onclick="handleFormSubmit()" id="auth-btn" style="width:100%; padding:18px; border-radius:15px; font-weight:700; font-size:1.1rem; cursor:pointer;">Login</button>
+            
+            <div class="social-login" style="margin-top: 20px;">
+                <button class="btn-social" onclick="window.loginWithGoogle()">
+                    <i class="fab fa-google" style="color:#DB4437;"></i> Continue with Google
+                </button>
+            </div>
+
+            <p onclick="toggleMode()" id="switch-txt" class="switch-txt">
+                New to ExamEdge? Create Account
+            </p>
+        </div>
+    </div>
+
+    <script type="module" src="js/auth.js"></script>
+    <script>
+        let mode = 'login';
+
+        function openAuth(m) {
+            mode = m || 'login';
+            const popup = document.getElementById('auth-popup');
+            popup.style.display = 'flex';
+            setTimeout(() => { popup.classList.add('active'); }, 10);
+            renderUI();
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('auth-popup');
+            popup.classList.remove('active');
+            setTimeout(() => { popup.style.display = 'none'; }, 400);
+        }
+
+        function toggleMode() {
+            mode = (mode === 'login' ? 'signup' : 'login');
+            renderUI();
+        }
+
+        function renderUI() {
+            const isSignup = (mode === 'signup');
+            document.getElementById('auth-title').innerText = isSignup ? 'Create Account' : 'Welcome Back';
+            document.getElementById('auth-subtitle').innerText = isSignup ? 'Join the community of toppers.' : 'Login to access your dashboard.';
+            document.getElementById('signup-name-div').style.display = isSignup ? 'block' : 'none';
+            document.getElementById('forgot-link').style.display = isSignup ? 'none' : 'block';
+            document.getElementById('auth-btn').innerText = isSignup ? 'Sign Up' : 'Login';
+            document.getElementById('switch-txt').innerText = isSignup ? "Already have an account? Login" : "New to ExamEdge? Create Account";
+        }
+
+        function handleFormSubmit() {
+            const email = document.getElementById('u-email').value;
+            const pass = document.getElementById('u-pass').value;
+            const name = document.getElementById('u-name').value;
+            if(!email || !pass) return alert("All fields are required!");
+            
+            if(mode === 'signup') {
+                if(!name) return alert("Name is required!");
+                if(window.signUp) window.signUp(email, pass, name);
+            } else {
+                if(window.login) window.login(email, pass);
+            }
+        }
+
+        async function handleForgot() {
+            const email = document.getElementById('u-email').value;
+            if(!email) return alert("Enter email to reset password.");
+            if(window.resetPassword) await window.resetPassword(email);
+        }
+
+        window.onclick = (e) => { 
+            const popup = document.getElementById('auth-popup');
+            if (e.target == popup) closePopup(); 
+        }
+    </script>
+</body>
+</html>

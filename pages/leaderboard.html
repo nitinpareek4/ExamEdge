@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard | ExamEdge</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-page">
+
+    <nav class="navbar">
+        <div class="logo-area" onclick="window.location.href='dashboard.html'" style="cursor:pointer;">
+            <img src="../assets/image/logo.png" alt="ExamEdge" class="logo">
+            <span class="brand-name">ExamEdge</span>
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+        </div>
+    </nav>
+
+    <div class="leaderboard-container animate-pop">
+        <h2 style="text-align: center; margin-bottom: 40px; color: var(--primary);">Global Rankings</h2>
+
+        <div class="top-three" id="top-three-display">
+            <div class="winner rank-2">
+                <div class="rank-label">2</div>
+                <div class="avatar-init" id="rank2-init">-</div>
+                <h4 id="rank2-name">Loading...</h4>
+                <p id="rank2-pts">0 Pts</p>
+            </div>
+            <div class="winner rank-1">
+                <div class="rank-label">1</div>
+                <div class="avatar-init" id="rank1-init">-</div>
+                <h4 id="rank1-name">Loading...</h4>
+                <p id="rank1-pts">0 Pts</p>
+            </div>
+            <div class="winner rank-3">
+                <div class="rank-label">3</div>
+                <div class="avatar-init" id="rank3-init">-</div>
+                <h4 id="rank3-name">Loading...</h4>
+                <p id="rank3-pts">0 Pts</p>
+            </div>
+        </div>
+
+        <div class="leaderboard-table" id="leaderboard-list">
+            <div style="text-align: center; padding: 20px;">Fetching rankings...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db, auth } from '../js/firebase-config.js';
+        import { collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const leaderboardList = document.getElementById('leaderboard-list');
+
+        // Real-time Leaderboard Listener
+        const q = query(collection(db, "users"), orderBy("points", "desc"), limit(10));
+
+        onSnapshot(q, (snapshot) => {
+            let students = [];
+            snapshot.forEach((doc) => {
+                students.push({ id: doc.id, ...doc.data() });
+            });
+
+            renderLeaderboard(students);
+        });
+
+        function renderLeaderboard(students) {
+            // Update Top 3
+            if (students[0]) {
+                document.getElementById('rank1-name').innerText = students[0].name || "Student";
+                document.getElementById('rank1-pts').innerText = students[0].points + " Pts";
+                document.getElementById('rank1-init').innerText = (students[0].name || "S").charAt(0).toUpperCase();
+            }
+            if (students[1]) {
+                document.getElementById('rank2-name').innerText = students[1].name || "Student";
+                document.getElementById('rank2-pts').innerText = students[1].points + " Pts";
+                document.getElementById('rank2-init').innerText = (students[1].name || "S").charAt(0).toUpperCase();
+            }
+            if (students[2]) {
+                document.getElementById('rank3-name').innerText = students[2].name || "Student";
+                document.getElementById('rank3-pts').innerText = students[2].points + " Pts";
+                document.getElementById('rank3-init').innerText = (students[2].name || "S").charAt(0).toUpperCase();
+            }
+
+            // Update List (Rank 4 to 10)
+            leaderboardList.innerHTML = students.slice(3).map((s, index) => `
+                <div class="table-row ${s.id === auth.currentUser?.uid ? 'current-user' : ''}">
+                    <div class="rank-num">#${index + 4}</div>
+                    <div class="student-info">${s.name || 'Anonymous Student'}</div>
+                    <div class="student-pts">${s.points} Pts</div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

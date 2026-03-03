@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | ExamEdge</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-page">
+
+    <nav class="navbar">
+        <div class="logo-area" onclick="window.location.href='dashboard.html'" style="cursor:pointer;">
+            <img src="../assets/image/logo.png" alt="ExamEdge" class="logo">
+            <span class="brand-name">ExamEdge</span>
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+        </div>
+    </nav>
+
+    <div class="leaderboard-container animate-pop" style="margin-top: 40px; max-width: 600px;">
+        <div class="profile-header" style="text-align: center; margin-bottom: 30px;">
+            <div class="avatar-wrapper">
+                <div class="rank-1 winner" style="width: 120px; height: 120px; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <span id="profile-initial" style="font-size: 50px; font-weight: 700; color: #ffcc00;">S</span>
+                </div>
+            </div>
+            <h2 id="display-name" style="margin-top: 15px;">Student Name</h2>
+            <p id="display-email" style="color: var(--secondary);">student@example.com</p>
+        </div>
+
+        <hr class="separator">
+
+        <div class="auth-inputs">
+            <label style="font-weight: 600; font-size: 0.9rem;">Full Name</label>
+            <input type="text" id="edit-name" placeholder="Update your name">
+            
+            <label style="font-weight: 600; font-size: 0.9rem; margin-top: 15px; display: block;">Exam Preference</label>
+            <select id="exam-pref" style="width: 100%; padding: 14px; margin: 12px 0; border: 1.5px solid #eee; border-radius: 12px;">
+                <option value="JEE">JEE (Engineering)</option>
+                <option value="NEET">NEET (Medical)</option>
+            </select>
+
+            <button class="btn-primary" onclick="updateProfile()" style="margin-top: 20px;">Save Profile</button>
+        </div>
+
+        <div class="info-grid" style="margin-top: 40px; grid-template-columns: repeat(2, 1fr);">
+            <div class="info-box" style="text-align: center;">
+                <h3 id="stat-points">1200</h3>
+                <p>Points</p>
+            </div>
+            <div class="info-box" style="text-align: center;">
+                <h3 id="stat-rank">#42</h3>
+                <p>Rank</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth } from '../js/firebase-config.js';
+        import { onAuthStateChanged, updateProfile as updateFBProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const name = user.displayName || "Student";
+                document.getElementById('display-name').innerText = name;
+                document.getElementById('display-email').innerText = user.email;
+                document.getElementById('edit-name').value = name;
+                document.getElementById('profile-initial').innerText = name.charAt(0).toUpperCase();
+            } else {
+                window.location.href = "../index.html";
+            }
+        });
+
+        window.updateProfile = async () => {
+            const newName = document.getElementById('edit-name').value;
+            if (auth.currentUser) {
+                try {
+                    await updateFBProfile(auth.currentUser, { displayName: newName });
+                    alert("Profile updated successfully! 🎉");
+                    location.reload();
+                } catch (error) {
+                    alert("Error: " + error.message);
+                }
+            }
+        };
+    </script>
+</body>
+</html>
